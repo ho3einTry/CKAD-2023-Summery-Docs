@@ -1,0 +1,30 @@
+install kubernetes:
+
+1: 
+    swap disableed
+    moudle disables br_netfilter and overly
+    ip v 4 
+    ip forward 
+
+    https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+
+2:
+    install runtime (containerd or docker)
+    https://docs.docker.com/engine/install/ubuntu/
+ 
+3:
+    install Kubeadm, kublet and kubectl
+    https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+4: 
+    initialize control plane
+    https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+5:
+    install pod network add-on
+    https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
+    https://www.weave.works/docs/net/latest/kubernetes/kube-addon/#install
+
+6:
+
+    join workers nodes

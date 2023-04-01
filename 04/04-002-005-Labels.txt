@@ -1,0 +1,12 @@
+Labels example:
+    app: [APP-NAME]
+    env: dev,qa,prod,test
+    tier: frontend,backend,cache,database
+    release: stable,beta,alpha
+
+
+Labels example for objects:
+
+Pods=> env: staging
+Nodes=> disk:ssd
+Deployments=> app: demo

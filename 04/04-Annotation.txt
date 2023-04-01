@@ -1,0 +1,5 @@
+
+Anotaition for use user and external tools:
+    urls, phone numbers, build, release 
+    or image information like timestamps, release IDs, git branch,
+    PR numbers, image hashes and registry addresses.
