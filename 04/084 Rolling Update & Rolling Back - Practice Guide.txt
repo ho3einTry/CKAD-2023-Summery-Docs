@@ -47,6 +47,11 @@ kubectl create deployment nginx-deploy --image=nginx:1.18 --replicas=4
 
 kubectl set image deploy [DEPLOYMENT-NAME] [CONTAINER-NAME]=[CONTAINER-IMAGE]:[TAG] --record
 
+To overcome the absence of an audit trail with imperative commands, 
+the --record option is there to bind the root cause of the change as annotation 
+called kubernetes.io/change-cause and the value of this annotation is the imperative command itself.
+
+
 EX: 
 kubectl set image deploy nginx-deploy nginx=nginx:1.91 --record
 

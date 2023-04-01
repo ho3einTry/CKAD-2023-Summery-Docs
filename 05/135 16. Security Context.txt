@@ -1,0 +1,66 @@
+***************************************************************************************************
+*                                                                                                 *
+* Exercise: Security Context | Kubernetes                                                         *
+*                                                                                                 *
+* Author: Srinath Challa | Kubernetes SME | Udemy                                                 *
+*                                                                                                 *
+* Connect me on:                                                                                  *    
+* --------------                                                                                  *
+* https://www.udemy.com/user/srinathchalla/                                                       *
+* https://www.linkedin.com/in/srinathchalla/                                                      *
+* https://www.youtube.com/srinathchalla                                                           *
+*                                                                                                 *
+* Reference:                                                                                      *
+* ----------                                                                                      *
+* https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/          *
+* https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/   *
+* https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker              *
+*                                                                                                 *
+***************************************************************************************************
+
+In this Exercise:
+-----------------
+You will create the Pod without Security Context and with Security Context.
+Having a Pod with Security Context adds the extra layer of Security and its best practice to use as and when needed.
+
+NOTE: 
+-----
+a. To successfully finish this exercise, It is important to go through Security Context Limits Concept and Demo videos in this series.
+b. You can refer to Kuberenetes Docs for help when needed.
+
+
+***************************************************************************************************
+
+
+TASK-1: Create a Pod with SecurityContext:
+------------------------------------------
+a. Create a Pod with SecurityContext with below configuration options.
+
+runAsUser: 1000
+runAsGroup: 3000
+fsGroup: 2000
+
+
+
+***************************************************************************************************
+
+
+TASK-2: Validate:
+-----------------
+a. Identify the default ID inside the Pod
+b. Identify process owner and group inside the Pod
+c. Create a sample file and ensure the ownerships of that file.
+
+ALL the above should be owned and run-by non-root users.
+
+
+***************************************************************************************************
+
+TASK-3: Delete:
+---------------
+a. Delete the Pod
+b. Ensure Pod is deleted successfully.
+
+
+***************************************************************************************************
+

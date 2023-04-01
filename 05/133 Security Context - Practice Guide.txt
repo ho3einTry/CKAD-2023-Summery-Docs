@@ -1,0 +1,123 @@
+***************************************************************************************************
+*                                                                                                 *
+* Subject: Security Context | Kubernetes                                                          *
+*                                                                                                 *
+* Author: Srinath Challa | Kubernetes SME | Udemy                                                 *
+*                                                                                                 *
+* Created On: Feb 2021                                                                            *
+*                                                                                                 *
+* Connect me on:                                                                                  *    
+* --------------                                                                                  *
+* https://www.udemy.com/user/srinathchalla/                                                       *
+* https://www.linkedin.com/in/srinathchalla/                                                      *
+* https://www.youtube.com/srinathchalla                                                           *
+*                                                                                                 *
+* Reference:                                                                                      *
+* ----------                                                                                      *
+* https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/          *
+* https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/   *
+* https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker              *
+*                                                                                                 *
+***************************************************************************************************
+
+In this demo:
+-------------
+We will create the Pod without Security Context and with Security Context.
+Having a Pod with Security Context adds the extra layer of Security and its best practice to use as and when needed.
+
+***************************************************************************************************
+
+
+1. Pod WITH-OUT Security Context:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# pod-without-sec-con.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-without-sec-con 
+spec:
+  containers:
+  - name: sec-ctx-demo
+    image: busybox
+    command: [ "sh", "-c", "sleep 1h" ]
+    volumeMounts:
+    - name: sec-ctx-vol
+      mountPath: /data/demo
+  volumes:
+  - name: sec-ctx-vol
+    emptyDir: {}
+
+
+a. Deploy:
+----------
+kubectl apply -f pod-without-sec-con.yaml
+
+===================================================================================================
+
+b. Testing:
+-----------
+kubectl exec -it pod-without-sec-con -- /bin/sh
+
+# NOTE: Once you are inside the Pod, you can run below commands. You will notice everything is owned by "root". NOT Good!
+
+id
+
+ps
+
+ls -ld /data/demo
+
+
+***************************************************************************************************
+
+2. Pod WITH Security Context:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# pod-with-sec-con.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-sec-con
+spec:
+  containers:
+  - name: sec-ctx-demo
+    image: busybox
+    command: [ "sh", "-c", "sleep 1h" ]
+    volumeMounts:
+    - name: sec-ctx-vol
+      mountPath: /data/demo
+  volumes:
+  - name: sec-ctx-vol
+    emptyDir: {}
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+    fsGroup: 2000
+
+===================================================================================================
+
+a. Deploy:
+----------
+kubectl apply -f pod-without-sec-con.yaml
+
+===================================================================================================
+
+b. Testing:
+-----------
+kubectl exec -it pod-with-sec-con -- /bin/sh
+
+NOTE: Once you are inside the Pod, you can run below commands. 
+You will notice everything is owned by "non-root" user. GOOD..way to go!
+
+id
+
+ps
+
+ls -ld /data/demo
+
+touch /data/demo/testfile
+
+ls -l /data/demo/testfile
+
+
+***************************************************************************************************
