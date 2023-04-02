@@ -1,3 +1,21 @@
+      CPU
+milli-core  core
+100m        0.1
+500m        0.5
+1000m       1
+
+        RAM
+Power of 2  power of 10
+1Mi         1024 KB
+100Mi       105 MB
+500Mi       524 MB
+1Gi         1073 MB
+
+Mi= mebibyte 
+Gi= gibibyte
+MB= megabyte
+
+
 ***************************************************************************************************
 *                                                                                                 *
 * Subject: Resource Limits | Kubernetes                                                           *
