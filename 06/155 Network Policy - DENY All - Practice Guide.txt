@@ -1,0 +1,84 @@
+***************************************************************************************************
+*                                                                                                 *
+* Subject: Network Policy - DENY ALL Usecase | Kubernetes                                          *
+*                                                                                                 *
+* Author: Srinath Challa | Kubernetes SME | Udemy                                                 *
+*                                                                                                 *
+* Connect me on:                                                                                  *    
+* --------------                                                                                  *
+* https://www.udemy.com/user/srinathchalla/                                                       *
+* https://www.linkedin.com/in/srinathchalla/                                                      *
+* https://www.youtube.com/srinathchalla                                                           *
+*                                                                                                 *
+* Reference:                                                                                      *
+* ----------                                                                                      *
+* https://kubernetes.io/docs/concepts/services-networking/network-policies/                       *
+* https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource
+* https://cloud.google.com/kubernetes-engine/docs/tutorials/network-policy                        *
+* https://github.com/ahmetb/kubernetes-network-policy-recipes                                     *
+* https://github.com/ahmetb/kubernetes-network-policy-recipes/blob/master/01-deny-all-traffic-to-an-application.md
+* https://medium.com/@reuvenharrison/an-introduction-to-kubernetes-network-policies-for-security-people-ba92dd4c809d
+*                                                                                                 *
+***************************************************************************************************
+
+In this demo:
+-------------
+a. We will test the "DENY-All" usecases of Network Policy functionality
+
+This NetworkPolicy will drop all traffic to pods of an application, selected using Pod Selectors.
+
+Use Cases:
+----------
+* It’s very common: To start whitelisting the traffic using Network Policies, first you need to blacklist the traffic using this policy.
+* You want to run a Pod and want to prevent any other Pods communicating with it.
+* You temporarily want to isolate traffic to a Service from other Pods.
+
+
+***************************************************************************************************
+
+
+1. DENY ALL Traffic to an Application:
+--------------------------------------
+
+Deploying Sample Web App:
+-------------------------
+kubectl run web --image=nginx --labels app=web --expose --port 80
+
+
+Testing WITHOUT Network Policy:
+-------------------------------
+kubectl run test-$RANDOM --rm -i -t --image=alpine  -- sh
+wget -qO- http://web
+
+
+DENY ALL Network Policy:
+------------------------
+# Network Policy
+# web-deny-all.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-deny-all
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  ingress: []
+
+
+Testing WITH Network Policy:
+----------------------------
+kubectl run test-$RANDOM --rm -i -t --image=alpine  -- sh
+wget -qO- --timeout=2 http://web
+
+Cleanup:
+--------
+kubectl delete pod web
+kubectl delete service web
+kubectl delete networkpolicy web-deny-all
+
+
+***************************************************************************************************
+
+
+

@@ -1,0 +1,85 @@
+***************************************************************************************************
+*                                                                                                 *
+* Subject: Network Policy - LIMIT Traffic To Application | Kubernetes                             *
+*                                                                                                 *
+* Author: Srinath Challa | Kubernetes SME | Udemy                                                 *
+*                                                                                                 *
+* Connect me on:                                                                                  *    
+* --------------                                                                                  *
+* https://www.udemy.com/user/srinathchalla/                                                       *
+* https://www.linkedin.com/in/srinathchalla/                                                      *
+* https://www.youtube.com/srinathchalla                                                           *
+*                                                                                                 *
+* Reference:                                                                                      *
+* ----------                                                                                      *
+* https://kubernetes.io/docs/concepts/services-networking/network-policies/                       *
+* https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource
+* https://cloud.google.com/kubernetes-engine/docs/tutorials/network-policy                        *
+* https://github.com/ahmetb/kubernetes-network-policy-recipes                                     *
+* https://github.com/ahmetb/kubernetes-network-policy-recipes/blob/master/02-limit-traffic-to-an-application.md
+* https://medium.com/@reuvenharrison/an-introduction-to-kubernetes-network-policies-for-security-people-ba92dd4c809d
+*                                                                                                 *
+***************************************************************************************************
+
+In this demo:
+-------------
+a. We will test some of the usecases of Network Policy functionality
+
+You can create Networking Policies allowing traffic from only certain Pods.
+
+Use Case:
+---------
+Restrict traffic to a service only to other microservices that need to use it.
+Restrict connections to a database only to the application using it.
+
+
+***************************************************************************************************
+
+
+1. LIMIT Traffic to an Application:
+-----------------------------------
+
+Deploying Sample Web App:
+-------------------------
+kubectl run apiserver --image=nginx --labels app=bookstore,role=api --expose --port 80
+
+
+Network Policy: LIMITING Traffic
+--------------------------------
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: api-allow
+spec:
+  podSelector:
+    matchLabels:
+      app: bookstore
+      role: api
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: bookstore
+
+
+Testing: Deploying Pod WITHOUT labels:
+--------------------------------------
+kubectl run test-$RANDOM --rm -i -t --image=alpine -- sh
+wget -qO- --timeout=2 http://apiserver
+
+
+Testing: Deploying Pod WITH labels:
+-----------------------------------
+kubectl run --rm -i -t --image=alpine --labels app=bookstore,role=frontend -- sh
+wget -qO- --timeout=2 http://apiserver
+
+
+Cleanup:
+--------
+kubectl delete pod apiserver
+kubectl delete service apiserver
+kubectl delete networkpolicy api-allow
+
+
+***************************************************************************************************
+

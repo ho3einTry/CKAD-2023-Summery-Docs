@@ -1,0 +1,10 @@
+Network Plugins for network policy:
+
+1: calico
+2: Weave Net
+3: Kube-Router
+4: Romana
+
+not Flannel, because flannel not support network policy
+
+all of them are network providers

@@ -1,0 +1,73 @@
+***************************************************************************************************
+*                                                                                                 *
+* Subject: Network Policy - Allow All inside "default" Namespace | Kubernetes                       *
+*                                                                                                 *
+* Author: Srinath Challa | Kubernetes SME | Udemy                                                 *
+*                                                                                                 *
+* Connect me on:                                                                                  *    
+* --------------                                                                                  *
+* https://www.udemy.com/user/srinathchalla/                                                       *
+* https://www.linkedin.com/in/srinathchalla/                                                      *
+* https://www.youtube.com/srinathchalla                                                           *
+*                                                                                                 *
+* Reference:                                                                                      *
+* ----------                                                                                      *
+* https://kubernetes.io/docs/concepts/services-networking/network-policies/                       *
+* https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource
+* https://cloud.google.com/kubernetes-engine/docs/tutorials/network-policy                        *
+* https://github.com/ahmetb/kubernetes-network-policy-recipes                                     *
+* https://medium.com/@reuvenharrison/an-introduction-to-kubernetes-network-policies-for-security-people-ba92dd4c809d
+*                                                                                                 *
+***************************************************************************************************
+
+In this demo:
+-------------
+a. We will test some of the usecases of Network Policy functionality
+
+Use Case: 
+~~~~~~~~~
+After applying a deny-all policy which blocks all non-whitelisted traffic to the application, now you have to allow access to an application from all pods in the current namespace.
+
+Applying this policy makes any other policies restricting the traffic to the pod void, and allow all traffic to it from its namespace and other namespaces.
+
+
+***************************************************************************************************
+
+
+1. ALLOW ALL Traffic to an Application:
+---------------------------------------
+
+Deploying Sample Web App:
+-------------------------
+kubectl run --generator=run-pod/v1 web --image=nginx --labels=app=web --expose --port 80
+
+
+Network Policy: LIMITING Traffic
+--------------------------------
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-all
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  ingress:
+  - {}
+
+
+Testing: Deploying Pod WITHOUT labels:
+--------------------------------------
+# We are in default namespace
+kubectl run --generator=run-pod/v1 test-$RANDOM --rm -i -t --image=alpine -- sh
+wget -qO- --timeout=2 http://web
+
+Cleanup:
+--------
+kubectl delete pod,service web
+kubectl delete networkpolicy web-allow-all web-deny-all
+
+
+***************************************************************************************************
+
